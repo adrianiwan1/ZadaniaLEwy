@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>Vue</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+			crossorigin="anonymous">
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+  <body>
+    <div id="app">
+		<header>
+			<div class="navbar navbar-default">	
+			<h1> {{sitename}} </h1>
+			</div>
+			<div class="nav navbar-nav navbar-right cart">
+				<button type="button" class="btn btn-default btn-lg" v-on:click="showCheckout">
+					<span class="glyphicon glyphicon-shopping-cart">{{cartItemCount}}</span>Kasa
+				</button>
+			</div>
+		</header>	
+		
+		<main>
+		  <div class="row product">
+			<div v-if="showProduct">
+			<div class="col">
+			  <figure>
+				<img v-bind:src="product.image">	
+			  </figure>
+			</div>
+
+			<div class="col col-expand">	
+			  <h1 v-text="product.title"></h1>	
+			  <p v-html="product.description"></p>	
+			  <p class="price">{{ product.price | formatPrice }}</p>	
+			</div>
+
+			
+			<button class="btn btn-primary" v-on:click="addToCart" v-if="canAddToCart">Dodaj do koszyka</button>
+			<button class="btn btn-secondary" v-else>Dodaj do koszyka</button>
+			</div>
+			<div v-else>
+
+				asdasdasd
+			
+			</div>
+		  </div>
+		</main>
+
+    </div>
+
+    <script type="text/javascript">
+
+	  var webstore = new Vue({
+		  el: '#app',
+		  data: {
+			showProduct: true,
+			sitename: 'Sklep',
+			product: {
+				id: 1001,     	
+				title: "Worek ziemniaków 10 kg",
+				description: "<li>10-kilogramowe opakowanie pysznych ziemniaków.</li>",
+				price: 1000,	
+				image: "assets/images/potato.jpg",
+				availableInventory:5
+			},
+			cart: []
+		  },
+		  filters: {	
+				formatPrice: function(price) {	
+					let rest = price % 100 
+                    let full = (price / 100) | 0 
+                    return '' + full + ',' + (rest < 10 ? '0' + rest : rest) + " zł"
+				}
+		   },
+		   methods: {
+			addToCart: function() {
+				this.cart.push(this.product.id);
+			},
+			showCheckout() {
+				this.showProduct = this.showProduct ? false : true;
+			},
+		   },
+		   computed: {
+			cartItemCount: function() {
+				return this.cart.length || '';
+			},
+			canAddToCart: function() {
+				return this.product.availableInventory > this.cartItemCount;
+			}
+		   },
+		});
+    </script>
+    
+  </body>
+</html>
